@@ -1,4 +1,6 @@
 # MyAngularLearning
+This is used to learn how dynamic loaders will behave using differnet cases like view child and component resolver factory
+
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.1.0.
 
