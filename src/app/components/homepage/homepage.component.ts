@@ -27,7 +27,7 @@ export class HomepageComponent implements OnInit , AfterViewInit {
 
   ngOnInit(): void {
     const viewContainerRef = this.dynamicDirective.viewContainerRef;
-    this.loaderService.loadComponent(viewContainerRef,true);
+    this.loaderService.loadComponent(viewContainerRef,false);
   }
 
  //  @ViewChild(DynamicPageComponent) dynamicPage!: DynamicPageComponent;

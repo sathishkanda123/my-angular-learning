@@ -1,5 +1,5 @@
 import { ComponentFactoryResolver, Injectable, ViewContainerRef } from '@angular/core';
-import { from } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 export interface ComponentLoader {
@@ -13,11 +13,13 @@ export class DynamicLoaderServiceService {
 
   componentResolver!: ComponentFactoryResolver;
 
-  constructor(componentResolver: ComponentFactoryResolver) { }
+  constructor(componentResolver: ComponentFactoryResolver) {
+    this.componentResolver = componentResolver;
+  }
 
 
-  forChild(vcr: ViewContainerRef, cl: ComponentLoader) {
-     from(cl.loadChildren()).pipe(
+  forChild(vcr: ViewContainerRef, cl: ComponentLoader) : Observable<any> {
+    return from(cl.loadChildren()!).pipe(
       map((component: any) => this.componentResolver.resolveComponentFactory(component)),
       map(componentFactory => vcr.createComponent(componentFactory))
     );
@@ -25,25 +27,29 @@ export class DynamicLoaderServiceService {
 
   private loadLoginRequest(): any {
 
-    return () =>{
+    return () =>
        import('../components/login-request/login-request.component').then(
            login=> login.LoginRequestComponent
        );
-    }
+
 
   }
 
   private loadLoginComponent() : any{
-    return () =>{
+    return () =>
     import('../components/login-component/login-component.component').then(
       login=> login.LoginComponentComponent
   );
-    }
+
   }
 
   loadComponent(viewContainerRef: ViewContainerRef , isLogin: boolean){
      viewContainerRef.clear();
-    this.forChild(viewContainerRef, {loadChildren:isLogin? this.loadLoginComponent(): this.loadLoginRequest});
+     console.log(this.loadLoginComponent());
+    this.forChild(viewContainerRef, {loadChildren: isLogin? this.loadLoginComponent(): this.loadLoginRequest()}).subscribe(data=>
+      {
+       console.log("data changes");
+      })
   }
 
 
