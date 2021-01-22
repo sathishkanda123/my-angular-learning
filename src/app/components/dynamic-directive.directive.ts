@@ -1,7 +1,8 @@
-import { Directive, ViewContainerRef } from '@angular/core';
+import { Component, Directive, ViewContainerRef } from '@angular/core';
 
-@Directive({
-  selector: '[appDynamicDirective]'
+@Component({
+  selector: 'app-dynamic-directive',
+  templateUrl: 'dynamic-directive.html'
 })
 export class DynamicDirectiveDirective {
 

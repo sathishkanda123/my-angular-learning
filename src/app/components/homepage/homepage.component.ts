@@ -1,7 +1,7 @@
 import { DynamicLoaderServiceService } from './../../services/dynamic-loader-service.service';
 import { DynamicDirectiveDirective } from './../dynamic-directive.directive';
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { DynamicPageComponent } from '../dynamic-page/dynamic-page.component';
+import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+
 
 @Component({
   selector: 'app-homepage',
@@ -13,7 +13,7 @@ export class HomepageComponent implements OnInit , AfterViewInit {
   @ViewChild(DynamicDirectiveDirective, { static: true })
   dynamicDirective! : DynamicDirectiveDirective;
 
-  @ViewChild("#home") dynamicHomeElement!: ElementRef;
+  @ViewChild('home') private dynamicHomeElement!: ElementRef;
 
   name = 'Sathish';
 
@@ -21,20 +21,28 @@ export class HomepageComponent implements OnInit , AfterViewInit {
 
   loaderService!: DynamicLoaderServiceService;
 
-  constructor(loaderService: DynamicLoaderServiceService) {
+  constructor(loaderService: DynamicLoaderServiceService, private rendered2: Renderer2, private elRef: ElementRef) {
     this.loaderService = loaderService;
+
    }
 
   ngOnInit(): void {
-    const viewContainerRef = this.dynamicDirective.viewContainerRef;
-    this.loaderService.loadComponent(viewContainerRef,false);
+
   }
 
  //  @ViewChild(DynamicPageComponent) dynamicPage!: DynamicPageComponent;
 
 
   ngAfterViewInit(){
-   //  console.log("in parent... "+this.dynamicPage.dynamicElement);
+    this.rendered2.setStyle(this.dynamicHomeElement.nativeElement,'color','red');
+    const li = this.rendered2.createElement('li');
+    const text = this.rendered2.createText('New li element from renderer');
+    this.rendered2.appendChild(li, text);
+    this.rendered2.appendChild(this.dynamicHomeElement.nativeElement, li);
+    const div = this.rendered2.createElement('div');
+    const beforeChild = this.rendered2.createText('beforeChild');
+    this.rendered2.appendChild(div, beforeChild);
+    this.rendered2.insertBefore(this.elRef.nativeElement.parentNode, div,this.elRef.nativeElement);
 
   }
 
